@@ -4,44 +4,15 @@ declare(strict_types=1);
 
 namespace YourBureau\Api\Resource;
 
-use YourBureau\Api\Pagination\Page;
-
 /**
- * Customer–contact links (`/api/v3/customer-contacts`).
+ * CustomerContacts API resource (`/api/v3/customer-contacts`).
  */
-final class CustomerContacts extends AbstractResource
+final class CustomerContacts extends CrudResource
 {
 
 
-	private const PATH = '/api/v3/customer-contacts';
-
-
-	/**
-	 * @param array<string, scalar|null> $query
-	 */
-	public function list(array $query = []): Page
+	protected function path(): string
 	{
-		return $this->listPage(self::PATH, $query);
-	}
-
-
-
-	/**
-	 * @param array<string, scalar|null> $query
-	 * @return list<array<string, mixed>>
-	 */
-	public function listAll(array $query = []): array
-	{
-		return $this->listAllPages(self::PATH, $query);
-	}
-
-
-
-	/**
-	 * @return array<string, mixed>
-	 */
-	public function get(int $customerContactId): array
-	{
-		return $this->httpGet(self::PATH . '/' . $customerContactId);
+		return '/api/v3/customer-contacts';
 	}
 }
