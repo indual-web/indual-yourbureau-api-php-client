@@ -76,27 +76,16 @@ final class Offers extends AbstractResource
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function update(int $offerId, array $payload): array
+	public function update(int|string $offerId, array $payload): array
 	{
-		return $this->httpPatch(self::PATH . '/' . $offerId, $payload);
+		return $this->httpPatch(self::PATH . '/' . rawurlencode((string) $offerId), $payload);
 	}
 
 
 
-	public function delete(int $offerId): void
+	public function delete(int|string $offerId): void
 	{
-		$this->httpDelete(self::PATH . '/' . $offerId);
-	}
-
-
-
-	/**
-	 * @param array<string, mixed> $payload
-	 * @return array<string, mixed>
-	 */
-	public function addArticles(int $offerId, array $payload): array
-	{
-		return $this->httpPost(self::PATH . '/' . $offerId . '/articles', $payload);
+		$this->httpDelete(self::PATH . '/' . rawurlencode((string) $offerId));
 	}
 
 
@@ -105,9 +94,9 @@ final class Offers extends AbstractResource
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function convertToOrder(int $offerId, array $payload = []): array
+	public function addArticles(int|string $offerId, array $payload): array
 	{
-		return $this->httpPost(self::PATH . '/' . $offerId . '/convert-to-order', $payload);
+		return $this->httpPost(self::PATH . '/' . rawurlencode((string) $offerId) . '/articles', $payload);
 	}
 
 
@@ -116,11 +105,24 @@ final class Offers extends AbstractResource
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function sendEmail(int $offerId, array $payload = []): array
+	public function convertToOrder(int|string $offerId, array $payload = []): array
 	{
-		return $this->httpPost(self::PATH . '/' . $offerId . '/send-email', $payload);
+		return $this->httpPost(
+			self::PATH . '/' . rawurlencode((string) $offerId) . '/convert-to-order',
+			$payload,
+		);
 	}
 
+
+
+	/**
+	 * @param array<string, mixed> $payload
+	 * @return array<string, mixed>
+	 */
+	public function sendEmail(int|string $offerId, array $payload = []): array
+	{
+		return $this->httpPost(self::PATH . '/' . rawurlencode((string) $offerId) . '/send-email', $payload);
+	}
 
 
 	/**

@@ -4,16 +4,35 @@ declare(strict_types=1);
 
 namespace YourBureau\Api\Resource;
 
+use YourBureau\Api\Pagination\Page;
+
 /**
  * Orders API resource (`/api/v3/orders`).
  */
-final class Orders extends CrudResource
+final class Orders extends AbstractResource
 {
 
 
-	protected function path(): string
+	private const PATH = '/api/v3/orders';
+
+
+	/**
+	 * @param array<string, scalar|null> $query
+	 */
+	public function list(array $query = []): Page
 	{
-		return '/api/v3/orders';
+		return $this->listPage(self::PATH, $query);
+	}
+
+
+
+	/**
+	 * @param array<string, scalar|null> $query
+	 * @return list<array<string, mixed>>
+	 */
+	public function listAll(array $query = []): array
+	{
+		return $this->listAllPages(self::PATH, $query);
 	}
 
 
@@ -25,7 +44,7 @@ final class Orders extends CrudResource
 	 */
 	public function get(int|string $orderId): array
 	{
-		return $this->httpGet($this->path() . '/' . rawurlencode((string) $orderId));
+		return $this->httpGet(self::PATH . '/' . rawurlencode((string) $orderId));
 	}
 
 
@@ -38,7 +57,7 @@ final class Orders extends CrudResource
 	 */
 	public function create(array $payload): array
 	{
-		$response = $this->httpPost($this->path(), $payload);
+		$response = $this->httpPost(self::PATH, $payload);
 		$id = $this->mutationId($response);
 		$publicOrderId = $response['public_order_id'] ?? ($response['data']['public_order_id'] ?? null);
 
@@ -52,12 +71,21 @@ final class Orders extends CrudResource
 
 
 	/**
+	 * Partial update via PATCH (same semantics as PUT in API v3).
+	 *
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function addArticles(int $orderId, array $payload): array
+	public function update(int|string $orderId, array $payload): array
 	{
-		return $this->httpPost($this->path() . '/' . $orderId . '/articles', $payload);
+		return $this->httpPatch(self::PATH . '/' . rawurlencode((string) $orderId), $payload);
+	}
+
+
+
+	public function delete(int|string $orderId): void
+	{
+		$this->httpDelete(self::PATH . '/' . rawurlencode((string) $orderId));
 	}
 
 
@@ -66,9 +94,9 @@ final class Orders extends CrudResource
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function convertToInvoice(int $orderId, array $payload = []): array
+	public function addArticles(int|string $orderId, array $payload): array
 	{
-		return $this->httpPost($this->path() . '/' . $orderId . '/convert-to-invoice', $payload);
+		return $this->httpPost(self::PATH . '/' . rawurlencode((string) $orderId) . '/articles', $payload);
 	}
 
 
@@ -77,9 +105,23 @@ final class Orders extends CrudResource
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function sendEmail(int $orderId, array $payload = []): array
+	public function convertToInvoice(int|string $orderId, array $payload = []): array
 	{
-		return $this->httpPost($this->path() . '/' . $orderId . '/send-email', $payload);
+		return $this->httpPost(
+			self::PATH . '/' . rawurlencode((string) $orderId) . '/convert-to-invoice',
+			$payload,
+		);
+	}
+
+
+
+	/**
+	 * @param array<string, mixed> $payload
+	 * @return array<string, mixed>
+	 */
+	public function sendEmail(int|string $orderId, array $payload = []): array
+	{
+		return $this->httpPost(self::PATH . '/' . rawurlencode((string) $orderId) . '/send-email', $payload);
 	}
 
 
@@ -88,9 +130,12 @@ final class Orders extends CrudResource
 	 * @param array<string, scalar|null> $query
 	 * @return array<string, mixed>
 	 */
-	public function timeReportPositions(int $orderId, array $query = []): array
+	public function timeReportPositions(int|string $orderId, array $query = []): array
 	{
-		return $this->httpGet($this->path() . '/' . $orderId . '/time-report-positions', $query);
+		return $this->httpGet(
+			self::PATH . '/' . rawurlencode((string) $orderId) . '/time-report-positions',
+			$query,
+		);
 	}
 
 

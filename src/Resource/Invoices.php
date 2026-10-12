@@ -4,16 +4,88 @@ declare(strict_types=1);
 
 namespace YourBureau\Api\Resource;
 
+use YourBureau\Api\Pagination\Page;
+
 /**
  * Invoices API resource (`/api/v3/invoices`).
  */
-final class Invoices extends CrudResource
+final class Invoices extends AbstractResource
 {
 
 
-	protected function path(): string
+	private const PATH = '/api/v3/invoices';
+
+
+	/**
+	 * @param array<string, scalar|null> $query
+	 */
+	public function list(array $query = []): Page
 	{
-		return '/api/v3/invoices';
+		return $this->listPage(self::PATH, $query);
+	}
+
+
+
+	/**
+	 * @param array<string, scalar|null> $query
+	 * @return list<array<string, mixed>>
+	 */
+	public function listAll(array $query = []): array
+	{
+		return $this->listAllPages(self::PATH, $query);
+	}
+
+
+
+	/**
+	 * Get one invoice by numeric invoice_id or public MD5 hash.
+	 *
+	 * @return array<string, mixed>
+	 */
+	public function get(int|string $invoiceId): array
+	{
+		return $this->httpGet(self::PATH . '/' . rawurlencode((string) $invoiceId));
+	}
+
+
+
+	/**
+	 * Create an invoice. Payload must include `customer_id` and `articles`.
+	 *
+	 * @param array<string, mixed> $payload
+	 * @return array{id: int, public_invoice_id: ?string, data: array<string, mixed>}
+	 */
+	public function create(array $payload): array
+	{
+		$response = $this->httpPost(self::PATH, $payload);
+		$id = $this->mutationId($response);
+		$publicInvoiceId = $response['public_invoice_id'] ?? ($response['data']['public_invoice_id'] ?? null);
+
+		return [
+			'id' => $id,
+			'public_invoice_id' => is_string($publicInvoiceId) && $publicInvoiceId !== '' ? $publicInvoiceId : null,
+			'data' => is_array($response['data'] ?? null) ? $response['data'] : [],
+		];
+	}
+
+
+
+	/**
+	 * Partial update via PATCH (same semantics as PUT in API v3).
+	 *
+	 * @param array<string, mixed> $payload
+	 * @return array<string, mixed>
+	 */
+	public function update(int|string $invoiceId, array $payload): array
+	{
+		return $this->httpPatch(self::PATH . '/' . rawurlencode((string) $invoiceId), $payload);
+	}
+
+
+
+	public function delete(int|string $invoiceId): void
+	{
+		$this->httpDelete(self::PATH . '/' . rawurlencode((string) $invoiceId));
 	}
 
 
@@ -22,9 +94,9 @@ final class Invoices extends CrudResource
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function addArticles(int $invoiceId, array $payload): array
+	public function addArticles(int|string $invoiceId, array $payload): array
 	{
-		return $this->httpPost($this->path() . '/' . $invoiceId . '/articles', $payload);
+		return $this->httpPost(self::PATH . '/' . rawurlencode((string) $invoiceId) . '/articles', $payload);
 	}
 
 
@@ -33,9 +105,9 @@ final class Invoices extends CrudResource
 	 * @param array<string, mixed> $payload
 	 * @return array<string, mixed>
 	 */
-	public function sendEmail(int $invoiceId, array $payload = []): array
+	public function sendEmail(int|string $invoiceId, array $payload = []): array
 	{
-		return $this->httpPost($this->path() . '/' . $invoiceId . '/send-email', $payload);
+		return $this->httpPost(self::PATH . '/' . rawurlencode((string) $invoiceId) . '/send-email', $payload);
 	}
 
 
