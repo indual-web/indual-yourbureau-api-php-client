@@ -23,7 +23,7 @@ Requires the package on [Packagist](https://packagist.org/packages/yourbureau/ap
     }
   ],
   "require": {
-    "yourbureau/api-client": "^1.1"
+    "yourbureau/api-client": "^1.0"
   }
 }
 ```
