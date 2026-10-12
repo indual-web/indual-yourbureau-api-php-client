@@ -1,0 +1,11 @@
+# Commit messages (GUI "Generate Commit Message" and Agent)
+
+When generating a Git commit message for this repository, use Conventional Commits:
+
+- Format: `<type>(<scope>): <summary>` (scope optional)
+- Types: `feat`, `fix`, `perf`, `refactor`, `style`, `docs`, `test`, `build`, `ci`, `chore`, `revert`
+- Summary: imperative mood, max 72 characters, no trailing period
+- Body only when the change is non-obvious; explain why, not what; prefer no body
+- Breaking change: `!` before the colon and a `BREAKING CHANGE:` footer
+- One logical change per message; do not restate the diff line by line
+- Match English subject lines as in recent Conventional Commits in this repo

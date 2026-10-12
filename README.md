@@ -12,23 +12,9 @@ PHP client for the [yourBureau REST API v3](https://api.yourbureau.ch/index.php/
 composer require yourbureau/api-client
 ```
 
-Requires the package on [Packagist](https://packagist.org/packages/yourbureau/api-client). Until then, use a VCS repository:
+Package: [yourbureau/api-client](https://packagist.org/packages/yourbureau/api-client) on Packagist.
 
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/indual-web/indual-yourbureau-api-php-client.git"
-    }
-  ],
-  "require": {
-    "yourbureau/api-client": "^1.0"
-  }
-}
-```
-
-Local path repository while developing:
+Local path repository while developing against this repo:
 
 ```json
 {
@@ -50,7 +36,7 @@ Versions come from **Git tags** (Packagist does not use a version field in `comp
 
 1. Update `CHANGELOG.md`, run `composer test`, commit
 2. Tag `vMAJOR.MINOR.PATCH` and `git push origin main --tags`
-3. First time only: submit the GitHub URL on [packagist.org](https://packagist.org/packages/submit) and enable the GitHub update hook
+
 ## Usage
 
 ```php

@@ -40,12 +40,6 @@ git push origin main --tags
 
 Use an annotated tag named `vMAJOR.MINOR.PATCH` (leading `v` is fine; Packagist normalizes it).
 
-### First-time Packagist setup (once)
+### Packagist auto-update
 
-1. Ensure `composer.json` has a unique `name` (`yourbureau/api-client`), `description`, and `license`
-2. Push the repo to GitHub (already: `indual-web/indual-yourbureau-api-php-client`)
-3. On [packagist.org](https://packagist.org/packages/submit): submit the GitHub URL
-4. In Packagist package settings → **GitHub Service Hook** / API token: enable auto-update so each new tag is imported without manual “Update”
-5. Consumers install with `composer require yourbureau/api-client`
-
-After the webhook is set, every `git push --tags` of a new SemVer tag creates a Packagist version automatically.
+The package is already on [Packagist](https://packagist.org/packages/yourbureau/api-client). Enable the GitHub webhook (Packagist login via GitHub + org access, or a manual webhook with your Packagist API token) so each new tag is imported without clicking “Update”. See [Packagist: how to update packages](https://packagist.org/about#how-to-update-packages).
