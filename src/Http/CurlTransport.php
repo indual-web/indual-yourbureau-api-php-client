@@ -64,13 +64,11 @@ final class CurlTransport implements TransportInterface
 		if ($raw === false) {
 			$error = curl_error($curl);
 			$code = curl_errno($curl);
-			curl_close($curl);
 			throw new TransportException('cURL request failed: ' . $error, $code);
 		}
 
 		$statusCode = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
 		$headerSize = (int) curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-		curl_close($curl);
 
 		$headerBlob = substr($raw, 0, $headerSize);
 		$body = substr($raw, $headerSize);
